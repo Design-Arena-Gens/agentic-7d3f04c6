@@ -1,0 +1,104 @@
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; background: #e0f2fe; color: #0f172a; }
+
+:root {
+  --sky-start: #bde7ff; /* top */
+  --sky-end: #e9fff5;   /* horizon */
+  --sun: #ffe380;
+  --sun-glow: rgba(255, 227, 128, 0.55);
+  --grass-1: #b4e0a6;
+  --grass-2: #8fcf93;
+  --hill-1: #a8e6cf;
+  --hill-2: #9bd8c3;
+  --hill-3: #8ccab6;
+  --tree-trunk: #6b4f3b;
+  --tree-leaf-1: #78c57a;
+  --tree-leaf-2: #6ab06c;
+  --tree-leaf-3: #5aa25c;
+}
+
+.scene {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--sky-start), var(--sky-end) 70%);
+}
+
+.vignette {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  background: radial-gradient(70% 60% at 50% 50%, transparent 65%, rgba(0,0,0,0.15) 100%);
+}
+
+.sun {
+  position: absolute; width: 240px; height: 240px; border-radius: 50%;
+  top: 8vh; right: 12vw; background: var(--sun);
+  box-shadow:
+    0 0 80px 20px var(--sun-glow),
+    0 0 160px 60px rgba(255, 240, 180, 0.35);
+  filter: saturate(1.1);
+}
+
+.hills { position: absolute; left: 0; right: 0; bottom: -12vh; height: 48vh; }
+.hill { position: absolute; bottom: 0; border-radius: 50% 50% 0 0; }
+.hill-1 { left: -10vw; width: 70vw; height: 42vh; background: var(--hill-1); filter: blur(0.4px); }
+.hill-2 { left: 20vw; width: 62vw; height: 36vh; background: var(--hill-2); filter: blur(0.6px); }
+.hill-3 { left: -20vw; width: 120vw; height: 30vh; background: var(--hill-3); filter: blur(1.2px); }
+
+.trees { position: absolute; left: 0; right: 0; bottom: 16vh; height: 36vh; pointer-events: none; }
+.tree { position: absolute; bottom: 0; width: 10px; transform-origin: bottom center; animation: sway 6s ease-in-out infinite; }
+.tree .trunk { height: 60px; width: 8px; margin: 0 auto; background: var(--tree-trunk); border-radius: 4px; }
+.tree .crown { position: absolute; left: 50%; transform: translateX(-50%); border-radius: 50%; }
+.tree .crown-1 { width: 70px; height: 54px; bottom: 44px; background: var(--tree-leaf-1); filter: drop-shadow(0 6px 8px rgba(0,0,0,0.12)); }
+.tree .crown-2 { width: 56px; height: 40px; bottom: 68px; background: var(--tree-leaf-2); }
+.tree .crown-3 { width: 46px; height: 34px; bottom: 84px; background: var(--tree-leaf-3); }
+
+/* Position trees across the scene */
+.tree { left: calc((var(--i) * 12%) + 6%); }
+.tree:nth-child(odd) { bottom: 2vh; animation-duration: 7s; }
+.tree:nth-child(3n) { animation-duration: 5.5s; }
+
+@keyframes sway {
+  0%, 100% { transform: rotate(-0.8deg); }
+  50% { transform: rotate(0.8deg); }
+}
+
+.birds { position: absolute; top: 14vh; left: -40vw; width: 60vw; height: auto; opacity: 0.7; }
+.flock { animation: fly 22s linear infinite; }
+.flock.delay-1 { animation-delay: 4s; }
+.flock.delay-2 { animation-delay: 8s; }
+
+@keyframes fly {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(140vw); }
+}
+
+.dialogue { position: absolute; left: 50%; bottom: 6vh; transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(6px) saturate(1.05);
+  border: 1px solid rgba(255,255,255,0.6);
+  border-radius: 14px; padding: 16px 20px; max-width: 86vw; box-shadow: 0 10px 24px rgba(31, 41, 55, 0.14);
+}
+.line { margin: 6px 0; font-size: 1.1rem; line-height: 1.5; color: #0f172a; text-shadow: 0 1px 0 rgba(255,255,255,0.3); }
+.line.harm { animation: fadeInUp 800ms ease-out 200ms both; }
+.line.ahad { animation: fadeInUp 800ms ease-out 700ms both; }
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.caption { position: absolute; left: 50%; bottom: 2vh; transform: translateX(-50%); font-size: 0.95rem; color: #1f2937; opacity: 0.9; }
+
+/* Accessibility: reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  .tree, .flock, .line.harm, .line.ahad { animation: none !important; }
+}
+
+/* Responsive tuning */
+@media (max-width: 600px) {
+  .sun { width: 180px; height: 180px; top: 6vh; right: 6vw; }
+  .dialogue { padding: 14px 16px; }
+  .line { font-size: 1rem; }
+}
